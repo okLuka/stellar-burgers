@@ -1,0 +1,179 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  loginUserApi,
+  registerUserApi,
+  getUserApi,
+  updateUserApi,
+  logoutApi
+} from '../../utils/burger-api';
+import type { TUser } from '../../utils/types';
+import { setCookie } from '../../utils/cookie';
+
+export const loginUser = createAsyncThunk<
+  { user: TUser; token: string },
+  { email: string; password: string },
+  { rejectValue: string }
+>('user/login', async (credentials, { rejectWithValue }) => {
+  try {
+    const res = await loginUserApi(credentials); // {success, accessToken, refreshToken, user}
+    if (!res?.success) return rejectWithValue('Не удалось войти');
+    localStorage.setItem('refreshToken', res.refreshToken);
+    setCookie('accessToken', res.accessToken);
+    return { user: res.user, token: res.accessToken };
+  } catch (err: any) {
+    const msg = err?.message ?? 'Ошибка при входе';
+    return rejectWithValue(msg);
+  }
+});
+
+export const registerUser = createAsyncThunk<
+  { user: TUser; token: string },
+  { email: string; password: string; name: string },
+  { rejectValue: string }
+>('user/register', async (data, { rejectWithValue }) => {
+  try {
+    const res = await registerUserApi(data); // {success, accessToken, refreshToken, user}
+    if (!res?.success) return rejectWithValue('Не удалось зарегистрироваться');
+    localStorage.setItem('refreshToken', res.refreshToken);
+    setCookie('accessToken', res.accessToken);
+    return { user: res.user, token: res.accessToken };
+  } catch (err: any) {
+    const msg = err?.message ?? 'Ошибка при регистрации';
+    return rejectWithValue(msg);
+  }
+});
+
+export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
+  'user/fetch',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getUserApi(); // {success, user}
+      if (!res?.success)
+        return rejectWithValue('Не удалось получить пользователя');
+      return res.user;
+    } catch (err: any) {
+      const msg = err?.message ?? 'Ошибка получения пользователя';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk<
+  TUser,
+  Partial<{ email: string; name: string; password: string }>,
+  { rejectValue: string }
+>('user/update', async (userPatch, { rejectWithValue }) => {
+  try {
+    const res = await updateUserApi(userPatch); // {success, user}
+    if (!res?.success) return rejectWithValue('Не удалось обновить профиль');
+    return res.user;
+  } catch (err: any) {
+    const msg = err?.message ?? 'Ошибка обновления профиля';
+    return rejectWithValue(msg);
+  }
+});
+
+export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
+  'user/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await logoutApi(); // {success: true}
+      if (!res?.success) return rejectWithValue('Не удалось выйти');
+      localStorage.removeItem('refreshToken');
+      setCookie('accessToken', '', { expires: -1 }); // очистить cookie
+    } catch (err: any) {
+      const msg = err?.message ?? 'Ошибка при выходе';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
+type UserState = {
+  user: TUser | null;
+  token: string | null; // accessToken из cookie можно и не дублировать, но полезно
+  isLoading: boolean;
+  error: string | null;
+};
+
+const initialState: UserState = {
+  user: null,
+  token: null,
+  isLoading: false,
+  error: null
+};
+
+export const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {},
+  extraReducers: (b) => {
+    // LOGIN
+    b.addCase(loginUser.pending, (s) => {
+      s.isLoading = true;
+      s.error = null;
+    });
+    b.addCase(loginUser.fulfilled, (s, a) => {
+      s.isLoading = false;
+      s.user = a.payload.user;
+      s.token = a.payload.token;
+    });
+    b.addCase(loginUser.rejected, (s, a) => {
+      s.isLoading = false;
+      s.error = a.payload ?? 'Ошибка при входе';
+    });
+
+    // REGISTER
+    b.addCase(registerUser.pending, (s) => {
+      s.isLoading = true;
+      s.error = null;
+    });
+    b.addCase(registerUser.fulfilled, (s, a) => {
+      s.isLoading = false;
+      s.user = a.payload.user;
+      s.token = a.payload.token;
+    });
+    b.addCase(registerUser.rejected, (s, a) => {
+      s.isLoading = false;
+      s.error = a.payload ?? 'Ошибка при регистрации';
+    });
+
+    // FETCH
+    b.addCase(fetchUser.pending, (s) => {
+      s.isLoading = true;
+      s.error = null;
+    });
+    b.addCase(fetchUser.fulfilled, (s, a) => {
+      s.isLoading = false;
+      s.user = a.payload;
+    });
+    b.addCase(fetchUser.rejected, (s, a) => {
+      s.isLoading = false;
+      s.error = a.payload ?? 'Ошибка загрузки профиля';
+    });
+
+    // UPDATE
+    b.addCase(updateUser.pending, (s) => {
+      s.isLoading = true;
+      s.error = null;
+    });
+    b.addCase(updateUser.fulfilled, (s, a) => {
+      s.isLoading = false;
+      s.user = a.payload;
+    });
+    b.addCase(updateUser.rejected, (s, a) => {
+      s.isLoading = false;
+      s.error = a.payload ?? 'Ошибка обновления профиля';
+    });
+
+    // LOGOUT
+    b.addCase(logoutUser.fulfilled, (s) => {
+      s.user = null;
+      s.token = null;
+    });
+    b.addCase(logoutUser.rejected, (s, a) => {
+      s.error = a.payload ?? 'Ошибка при выходе';
+    });
+  }
+});
+
+export default userSlice.reducer;

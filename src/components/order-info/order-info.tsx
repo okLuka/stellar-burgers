@@ -1,21 +1,40 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TOrder } from '@utils-types';
+import { selectIngredients } from '@selectors';
+import { useSelector } from '../../services/store';
+import { getOrderByNumberApi } from '../../utils/burger-api';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const { number } = useParams<{ number: string }>();
+  const ingredients = useSelector(selectIngredients);
+  const [orderData, setOrderData] = useState<TOrder | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const ingredients: TIngredient[] = [];
+  useEffect(() => {
+    if (number) {
+      setLoading(true);
+      setError(null);
+      getOrderByNumberApi(Number(number))
+        .then((response) => {
+          if (response.success && response.orders.length > 0) {
+            setOrderData(response.orders[0]);
+          } else {
+            setError('Заказ не найден');
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to fetch order:', error);
+          setError('Ошибка загрузки заказа');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [number]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -58,6 +77,14 @@ export const OrderInfo: FC = () => {
       total
     };
   }, [orderData, ingredients]);
+
+  if (loading) {
+    return <Preloader />;
+  }
+
+  if (error) {
+    return <div className='text text_type_main-default'>{error}</div>;
+  }
 
   if (!orderInfo) {
     return <Preloader />;

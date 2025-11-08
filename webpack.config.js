@@ -54,11 +54,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html'
     }),
-    new Dotenv()
+    new Dotenv({
+      path: path.resolve(__dirname, '.env'), // явно укажем файл
+      systemvars: true, // брать переменные и из окружения процесса (на всякий)
+    }),
   ],
   resolve: {
     extensions: [
       '*',
+      '.*',
       '.js',
       '.jsx',
       '.ts',
