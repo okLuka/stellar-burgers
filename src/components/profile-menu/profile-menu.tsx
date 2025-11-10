@@ -8,8 +8,11 @@ export const ProfileMenu: FC = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+      // navigate('/login', { replace: true });
+    } catch {}
   };
 
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;

@@ -80,7 +80,7 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
       const res = await logoutApi(); // {success: true}
       if (!res?.success) return rejectWithValue('Не удалось выйти');
       localStorage.removeItem('refreshToken');
-      setCookie('accessToken', '', { expires: -1 }); // очистить cookie
+      setCookie('accessToken', '', { expires: -1, path: '/' }); // очистить cookie
     } catch (err: any) {
       const msg = err?.message ?? 'Ошибка при выходе';
       return rejectWithValue(msg);
@@ -90,7 +90,7 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
 
 type UserState = {
   user: TUser | null;
-  token: string | null; // accessToken из cookie можно и не дублировать, но полезно
+  token: string | null;
   isLoading: boolean;
   error: string | null;
 };
@@ -105,7 +105,11 @@ const initialState: UserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    clearUserError: (s) => {
+      s.error = null;
+    }
+  },
   extraReducers: (b) => {
     // LOGIN
     b.addCase(loginUser.pending, (s) => {
@@ -114,6 +118,7 @@ export const userSlice = createSlice({
     });
     b.addCase(loginUser.fulfilled, (s, a) => {
       s.isLoading = false;
+      s.error = null;
       s.user = a.payload.user;
       s.token = a.payload.token;
     });
@@ -129,6 +134,7 @@ export const userSlice = createSlice({
     });
     b.addCase(registerUser.fulfilled, (s, a) => {
       s.isLoading = false;
+      s.error = null;
       s.user = a.payload.user;
       s.token = a.payload.token;
     });
@@ -144,6 +150,7 @@ export const userSlice = createSlice({
     });
     b.addCase(fetchUser.fulfilled, (s, a) => {
       s.isLoading = false;
+      s.error = null;
       s.user = a.payload;
     });
     b.addCase(fetchUser.rejected, (s, a) => {
@@ -158,6 +165,7 @@ export const userSlice = createSlice({
     });
     b.addCase(updateUser.fulfilled, (s, a) => {
       s.isLoading = false;
+      s.error = null;
       s.user = a.payload;
     });
     b.addCase(updateUser.rejected, (s, a) => {
@@ -169,6 +177,7 @@ export const userSlice = createSlice({
     b.addCase(logoutUser.fulfilled, (s) => {
       s.user = null;
       s.token = null;
+      s.error = null;
     });
     b.addCase(logoutUser.rejected, (s, a) => {
       s.error = a.payload ?? 'Ошибка при выходе';
@@ -177,3 +186,4 @@ export const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+export const { clearUserError } = userSlice.actions;

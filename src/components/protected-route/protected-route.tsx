@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { getCookie } from '../../utils/cookie';
+import { useSelector } from '../../services/store';
 
 type Props = {
   children: JSX.Element;
@@ -7,11 +8,18 @@ type Props = {
 };
 
 export const ProtectedRoute = ({ children, onlyUnAuth }: Props) => {
-  const isAuth = Boolean(getCookie('accessToken'));
+  const { user, token, isLoading } = useSelector((s) => s.user);
   const location = useLocation();
+  const cookieToken = getCookie('accessToken');
+  const isAuth = Boolean(cookieToken || token || user);
+
+  if (!onlyUnAuth && isLoading) {
+    return null;
+  }
 
   if (onlyUnAuth && isAuth) {
-    return <Navigate to='/' replace />;
+    const from = (location.state as any)?.from?.pathname || '/';
+    return <Navigate to={from} replace />;
   }
 
   if (!onlyUnAuth && !isAuth) {

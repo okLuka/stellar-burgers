@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { getCookie } from '../../utils/cookie';
 import { useSelector, useDispatch } from '../../services/store';
 import {
   selectConstructorItems,
@@ -16,10 +17,14 @@ export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(selectConstructorItems);
   const orderRequest = useSelector(selectOrderRequest);
   const orderModalData = useSelector(selectOrderModalData);
+  const { user, token } = useSelector((s) => s.user);
   const dispatch = useDispatch();
+
+  const isAuth = Boolean(getCookie('accessToken') || token || user);
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
+    if (!isAuth) return;
     dispatch(createOrder());
   };
 

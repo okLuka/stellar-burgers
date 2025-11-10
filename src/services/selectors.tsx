@@ -12,21 +12,22 @@ export const selectIngredientsError = (state: RootState) =>
   state.ingredients.error;
 
 // селекторы для конструктора
-export const selectConstructorBun = (state: RootState) => state.constructor.bun;
+export const selectConstructorBun = (state: RootState) =>
+  state.burgerConstructor.bun;
 
 export const selectConstructorIngredients = (state: RootState) =>
-  state.constructor.ingredients;
+  state.burgerConstructor.ingredients;
 
 export const selectConstructorItems = (state: RootState) => ({
-  bun: state.constructor?.bun ?? null,
-  ingredients: state.constructor?.ingredients ?? []
+  bun: state.burgerConstructor?.bun ?? null,
+  ingredients: state.burgerConstructor?.ingredients ?? []
 });
 
 export const selectOrderRequest = (state: RootState) =>
-  state.constructor.orderRequest;
+  state.burgerConstructor.orderRequest;
 
 export const selectOrderModalData = (state: RootState) =>
-  state.constructor.orderModalData;
+  state.burgerConstructor.orderModalData;
 
 // селекторы для feeds
 export const selectOrders = (state: RootState) => state.feeds.orders;

@@ -24,9 +24,9 @@ const initialState: ConstructorState = {
 export const createOrder = createAsyncThunk<
   { order: TOrder; name: string },
   void,
-  { rejectValue: string; state: { constructor: ConstructorState } }
->('constructor/createOrder', async (_, { getState, rejectWithValue }) => {
-  const { bun, ingredients } = getState().constructor;
+  { rejectValue: string; state: { burgerConstructor: ConstructorState } }
+>('burgerConstructor/createOrder', async (_, { getState, rejectWithValue }) => {
+  const { bun, ingredients } = getState().burgerConstructor;
 
   if (!bun) return rejectWithValue('Выберите булку');
 
@@ -47,7 +47,7 @@ export const createOrder = createAsyncThunk<
 });
 
 export const constructorSlice = createSlice({
-  name: 'constructor',
+  name: 'burgerConstructor',
   initialState,
   reducers: {
     setBun: (state, action: PayloadAction<TIngredient>) => {
