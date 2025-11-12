@@ -11,12 +11,6 @@ export const IngredientDetails: FC = () => {
   const dispatch = useDispatch();
   const ingredients = useSelector(selectIngredients);
 
-  useEffect(() => {
-    if (ingredients.length === 0) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients.length]);
-
   const ingredientData = useMemo(
     () => ingredients.find((item) => item._id === id),
     [ingredients, id]

@@ -21,14 +21,6 @@ export const OrderInfo: FC = () => {
   const [loading, setLoading] = useState(true); // загрузка заказа
   const [error, setError] = useState<string | null>(null);
 
-  
-  useEffect(() => {
-    if (ingredients.length === 0 && !ingredientsLoading) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients.length, ingredientsLoading]);
-
-
   useEffect(() => {
     if (!number) {
       setError('Неверный номер заказа');
@@ -63,7 +55,6 @@ export const OrderInfo: FC = () => {
     return () => controller.abort();
   }, [number]);
 
-  
   const orderInfo = useMemo(() => {
     if (!orderData || ingredients.length === 0) return null;
 
@@ -93,7 +84,6 @@ export const OrderInfo: FC = () => {
 
     return { ...orderData, ingredientsInfo, date, total };
   }, [orderData, ingredients]);
-
 
   if (loading || ingredientsLoading) return <Preloader />;
   if (error) return <div className='text text_type_main-default'>{error}</div>;

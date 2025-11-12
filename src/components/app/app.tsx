@@ -10,9 +10,12 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
+import { useEffect } from 'react';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import '../../index.css';
 import styles from './app.module.css';
+import { useDispatch } from '../../services/store';
+import { fetchIngredients } from '../../services/slices/ingredients-slice';
 
 import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
 
@@ -47,6 +50,12 @@ const App = () => {
   const location = useLocation();
   const state = location.state as { background?: Location } | undefined;
   const background = state?.background;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>

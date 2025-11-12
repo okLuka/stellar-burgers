@@ -12,10 +12,6 @@ import { selectIngredientsLoading } from '@selectors';
 export const ConstructorPage: FC = () => {
   /** TODO: взять переменную из стора */
   const isIngredientsLoading = useSelector(selectIngredientsLoading);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   return (
     <>
