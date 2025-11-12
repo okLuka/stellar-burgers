@@ -1,5 +1,6 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { BurgerConstructorUI } from '@ui';
 import { getCookie } from '../../utils/cookie';
 import { useSelector, useDispatch } from '../../services/store';
@@ -19,12 +20,17 @@ export const BurgerConstructor: FC = () => {
   const orderModalData = useSelector(selectOrderModalData);
   const { user, token } = useSelector((s) => s.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const isAuth = Boolean(getCookie('accessToken') || token || user);
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    if (!isAuth) return;
+    if (!isAuth) {
+      navigate('/login', { replace: true, state: { from: location } });
+      return;
+    }
     dispatch(createOrder());
   };
 

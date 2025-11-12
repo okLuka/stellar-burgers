@@ -46,3 +46,8 @@ export const selectUser = (s: RootState) => s.user.user;
 export const selectUserToken = (s: RootState) => s.user.token;
 export const selectUserLoading = (s: RootState) => s.user.isLoading;
 export const selectUserError = (s: RootState) => s.user.error;
+
+//userOrders
+export const selectUserOrders = (s: RootState) => s.userOrder.order;
+export const selectUserOrdersLoading = (s: RootState) => s.userOrder.isLoading;
+export const selectUserOrdersError = (s: RootState) => s.userOrder.error;

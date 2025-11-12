@@ -1,13 +1,21 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
-import { useSelector } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
+import { fetchIngredients } from '../../services/slices/ingredients-slice';
 import { selectIngredients } from '@selectors';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch();
   const ingredients = useSelector(selectIngredients);
+
+  useEffect(() => {
+    if (ingredients.length === 0) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
 
   const ingredientData = useMemo(
     () => ingredients.find((item) => item._id === id),
