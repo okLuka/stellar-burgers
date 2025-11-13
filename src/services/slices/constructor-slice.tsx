@@ -2,7 +2,8 @@ import {
   createSlice,
   createAsyncThunk,
   PayloadAction,
-  nanoid
+  nanoid,
+  createAction
 } from '@reduxjs/toolkit';
 import { orderBurgerApi } from '../../utils/burger-api';
 import { TIngredient, TConstructorIngredient, TOrder } from '../../utils/types';
@@ -53,15 +54,16 @@ export const constructorSlice = createSlice({
     setBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
     },
-    addIngredient: (state, action: PayloadAction<TIngredient>) => {
-      if (!state.ingredients) {
-        state.ingredients = [];
-      }
-      const newIngredient: TConstructorIngredient = {
-        ...action.payload,
-        id: `${action.payload._id}-${Date.now()}-${nanoid()}`
-      };
-      state.ingredients.push(newIngredient);
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        state.ingredients.push(action.payload);
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: {
+          ...ingredient,
+          id: '${ingredient._id}-${Date.now()}-${nanoid()}'
+        } as TConstructorIngredient
+      })
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
@@ -73,8 +75,6 @@ export const constructorSlice = createSlice({
       action: PayloadAction<{ fromIndex: number; toIndex: number }>
     ) => {
       const { fromIndex, toIndex } = action.payload;
-
-      // просто выходим, НИЧЕГО НЕ ВОЗВРАЩАЕМ
       if (
         fromIndex < 0 ||
         fromIndex >= state.ingredients.length ||
