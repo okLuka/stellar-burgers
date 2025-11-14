@@ -61,7 +61,7 @@ export const constructorSlice = createSlice({
       prepare: (ingredient: TIngredient) => ({
         payload: {
           ...ingredient,
-          id: '${ingredient._id}-${Date.now()}-${nanoid()}'
+          id: `${ingredient._id}-${Date.now()}-${nanoid()}`
         } as TConstructorIngredient
       })
     },
