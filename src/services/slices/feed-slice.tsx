@@ -55,6 +55,7 @@ export const feedsSlice = createSlice({
       state.orders = action.payload.orders;
       state.total = action.payload.total;
       state.totalToday = action.payload.totalToday;
+      state.error = null;
     });
   }
 });
