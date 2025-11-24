@@ -13,6 +13,16 @@ const getInitialState = () => ({
   userOrder: userOrderSlice.getInitialState()
 });
 
+afterEach(() => {
+  localStorage.clear();
+
+  document.cookie.split(";").forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+});
+
 describe('RootReducer initialization', () => {
   test('возвращает корректное начальное состояние', () => {
     const state = RootReducer(undefined, { type: '@@INIT' });

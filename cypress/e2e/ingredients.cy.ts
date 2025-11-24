@@ -4,7 +4,7 @@ describe('Главная страница с моковыми ингредиен
       fixture: 'ingredients.json'        
     }).as('getIngredients');
 
-    cy.visit('http://localhost:4000');   
+    cy.visit('/');   
 
     cy.wait('@getIngredients').then(interception => {
       console.log('MOCK RESPONSE BODY:', interception.response?.body);

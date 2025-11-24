@@ -20,10 +20,14 @@ export const loginUser = createAsyncThunk<
     localStorage.setItem('refreshToken', res.refreshToken);
     setCookie('accessToken', res.accessToken);
     return { user: res.user, token: res.accessToken };
-  } catch (err: any) {
-    const msg = err?.message ?? 'Ошибка при входе';
-    return rejectWithValue(msg);
-  }
+  } catch (error: unknown) {
+  const msg =
+    error instanceof Error
+      ? error.message
+      : 'Ошибка при входе';
+
+  return rejectWithValue(msg);
+}
 });
 
 export const registerUser = createAsyncThunk<
@@ -37,10 +41,14 @@ export const registerUser = createAsyncThunk<
     localStorage.setItem('refreshToken', res.refreshToken);
     setCookie('accessToken', res.accessToken);
     return { user: res.user, token: res.accessToken };
-  } catch (err: any) {
-    const msg = err?.message ?? 'Ошибка при регистрации';
-    return rejectWithValue(msg);
-  }
+  } catch (error: unknown) {
+  const msg =
+    error instanceof Error
+      ? error.message
+      : 'Ошибка при регистрации';
+
+  return rejectWithValue(msg);
+}
 });
 
 export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
@@ -51,8 +59,12 @@ export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
       if (!res?.success)
         return rejectWithValue('Не удалось получить пользователя');
       return res.user;
-    } catch (err: any) {
-      const msg = err?.message ?? 'Ошибка получения пользователя';
+    } catch (error: unknown) {
+      const msg =
+        error instanceof Error
+          ? error.message
+          : 'Ошибка получения пользователя';
+
       return rejectWithValue(msg);
     }
   }
@@ -67,8 +79,12 @@ export const updateUser = createAsyncThunk<
     const res = await updateUserApi(userPatch); // {success, user}
     if (!res?.success) return rejectWithValue('Не удалось обновить профиль');
     return res.user;
-  } catch (err: any) {
-    const msg = err?.message ?? 'Ошибка обновления профиля';
+    } catch (error: unknown) {
+    const msg =
+      error instanceof Error
+        ? error.message
+        : 'Ошибка получения пользователя';
+
     return rejectWithValue(msg);
   }
 });
@@ -81,8 +97,12 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
       if (!res?.success) return rejectWithValue('Не удалось выйти');
       localStorage.removeItem('refreshToken');
       setCookie('accessToken', '', { expires: -1, path: '/' }); // очистить cookie
-    } catch (err: any) {
-      const msg = err?.message ?? 'Ошибка при выходе';
+    } catch (error: unknown) {
+      const msg =
+        error instanceof Error
+          ? error.message
+          : 'Ошибка при выходе';
+
       return rejectWithValue(msg);
     }
   }

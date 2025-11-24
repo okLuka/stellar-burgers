@@ -14,6 +14,16 @@ const orderMock: TOrder = {
   ingredients: ['ing-1', 'ing-2']
 };
 
+afterEach(() => {
+  localStorage.clear();
+
+  document.cookie.split(";").forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+});
+
 describe('userOrderSlice reducer', () => {
   test('pending → isLoading = true, error = null', () => {
     const initial = getInitialState();

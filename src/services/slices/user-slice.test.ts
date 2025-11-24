@@ -17,10 +17,17 @@ const mockUser: TUser = {
   name: 'Test User'
 };
 
+afterEach(() => {
+  localStorage.clear();
+
+  document.cookie.split(";").forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+});
+
 describe('userSlice reducer', () => {
-
-  // LOGIN
-
 
   test('loginUser.pending → isLoading = true, error = null', () => {
     const initial = getInitialState();
@@ -53,9 +60,6 @@ describe('userSlice reducer', () => {
     expect(next.user).toBeNull();
   });
 
-  // REGISTER
-
-
   test('registerUser.pending → isLoading = true, error = null', () => {
     const next = reducer(getInitialState(), registerUser.pending('', { email: '', password: '', name: '' }));
 
@@ -84,9 +88,6 @@ describe('userSlice reducer', () => {
     expect(next.error).toBe('Ошибка рег');
   });
 
-  // FETCH USER
-
-
   test('fetchUser.pending → isLoading = true, error = null', () => {
     const next = reducer(getInitialState(), fetchUser.pending('', undefined));
 
@@ -112,9 +113,6 @@ describe('userSlice reducer', () => {
     expect(next.isLoading).toBe(false);
     expect(next.error).toBe('Ошибка получения');
   });
-
-  // UPDATE USER
-
 
   test('updateUser.pending → isLoading = true, error = null', () => {
     const next = reducer(getInitialState(), updateUser.pending('', {}));
@@ -142,9 +140,6 @@ describe('userSlice reducer', () => {
     expect(next.isLoading).toBe(false);
     expect(next.error).toBe('Ошибка обновления');
   });
-
-  // LOGOUT
-
 
   test('logoutUser.fulfilled → user=null, token=null, error=null', () => {
     const initial = {

@@ -5,6 +5,16 @@ import type { TOrdersData } from '../../utils/types';
 const getInitialState = (): FeedState =>
   reducer(undefined, { type: '@@INIT' }) as FeedState;
 
+afterEach(() => {
+  localStorage.clear();
+
+  document.cookie.split(";").forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+});
+
 describe('feedsSlice reducer', () => {
   test('при fetchFeeds.pending isLoading становится true, error сбрасывается', () => {
     const initialState = getInitialState();

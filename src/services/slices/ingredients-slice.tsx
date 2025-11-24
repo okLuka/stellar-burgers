@@ -10,7 +10,7 @@ export const fetchIngredients = createAsyncThunk<
   try {
     const res = await getIngredientsApi();
     return res;
-  } catch (err: any) {
+  } catch (err: unknown) {
     const msg =
       err instanceof Error
         ? err.message

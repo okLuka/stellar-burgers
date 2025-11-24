@@ -19,6 +19,16 @@ const baseIngredient: TIngredient = {
   image_large: 'https://example.com/img-large.png'
 };
 
+afterEach(() => {
+  localStorage.clear();
+
+  document.cookie.split(";").forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+});
+
 describe('ingredientsSlice reducer', () => {
   test('при fetchIngredients.pending isLoading = true, error = null', () => {
     const initialState = getInitialState();

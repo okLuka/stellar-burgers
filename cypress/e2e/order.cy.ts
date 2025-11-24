@@ -4,7 +4,7 @@ describe('Создание заказа', () => {
     cy.intercept('GET', '**/auth/user', { fixture: 'user.json' }).as('getUser');
     cy.intercept('POST', '**/orders', { fixture: 'order.json' }).as('createOrder');
 
-    cy.visit('http://localhost:4000', {
+    cy.visit('/', {
       onBeforeLoad(win) {
         win.localStorage.setItem('refreshToken', 'test-refresh-token');
         win.document.cookie = 'accessToken=test-access-token';
@@ -15,21 +15,18 @@ describe('Создание заказа', () => {
   });
 
   it('успешно создаёт заказ и очищает конструктор', () => {
-    // ДОБАВЛЕНИЕ БУЛКИ 
     cy.contains('Флюоресцентная булка R2-D3')      
       .parents()                                    
       .first()
       .find('button')                               
       .click();                                     
 
-    //  ДОБАВЛЕНИЕ НАЧИНКИ
     cy.contains('Филе Люминесцентного тетраодонтиформуса')
       .parents()
       .first()
       .find('button')
       .click();                                     
 
-    // ОФОРМЛЕНИЕ 
     cy.contains('Оформить заказ').click();
     cy.wait('@createOrder').then((i) => {
       const num = i.response?.body?.order?.number;
@@ -42,7 +39,6 @@ describe('Создание заказа', () => {
       cy.get('#modals').contains(num).should('not.exist');
     });
 
-    // ПРОВЕРКА ОЧИСТКИ КОНСТРУКТОРА 
     cy.contains('Выберите булки').should('exist');
     cy.contains('Выберите начинку').should('exist');
   });

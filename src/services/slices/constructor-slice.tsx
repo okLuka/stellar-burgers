@@ -36,7 +36,7 @@ export const createOrder = createAsyncThunk<
   try {
     const res = await orderBurgerApi(orderData);
     return res;
-  } catch (err: any) {
+  } catch (err: unknown) {
     const msg =
       err instanceof Error
         ? err.message

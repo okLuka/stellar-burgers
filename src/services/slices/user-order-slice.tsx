@@ -10,14 +10,16 @@ export const fetchUserOrders = createAsyncThunk<
   try {
     const orders = await getOrdersApi();
     return orders;
-  } catch (err: any) {
-    err instanceof Error
-      ? err.message
-      : typeof err === 'string'
-        ? err
+  } catch (error: unknown) {
+  const msg =
+    error instanceof Error
+      ? error.message
+      : typeof error === 'string'
+        ? error
         : 'Не удалось загрузить историю заказов';
-    return rejectWithValue(err);
-  }
+
+  return rejectWithValue(msg);
+}
 });
 
 interface OrderInfo {
