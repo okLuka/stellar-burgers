@@ -14,6 +14,12 @@ describe('Создание заказа', () => {
     cy.wait('@getIngredients');
   });
 
+  afterEach(() => {
+    cy.clearLocalStorage();
+    cy.clearCookies();
+  });
+
+
   it('успешно создаёт заказ и очищает конструктор', () => {
     cy.contains('Флюоресцентная булка R2-D3')      
       .parents()                                    
@@ -31,7 +37,6 @@ describe('Создание заказа', () => {
     cy.wait('@createOrder').then((i) => {
       const num = i.response?.body?.order?.number;
 
-      // ПРОВЕРКА МОДАЛКИ
       cy.get('#modals').contains(num).should('exist');
 
       cy.get('#modals').find('button').first().click();

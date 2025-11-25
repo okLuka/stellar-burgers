@@ -7,6 +7,12 @@ type Props = {
   onlyUnAuth?: boolean;
 };
 
+type ProtectedRouteState = {
+  from?: {
+    pathname?: string;
+  };
+};
+
 export const ProtectedRoute = ({ children, onlyUnAuth }: Props) => {
   const { user, token, isLoading } = useSelector((s) => s.user);
   const location = useLocation();
@@ -18,7 +24,8 @@ export const ProtectedRoute = ({ children, onlyUnAuth }: Props) => {
   }
 
   if (onlyUnAuth && isAuth) {
-    const from = (location.state as any)?.from?.pathname || '/';
+    const state = location.state as ProtectedRouteState | null;
+    const from = state?.from?.pathname || '/';
     return <Navigate to={from} replace />;
   }
 

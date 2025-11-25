@@ -12,4 +12,8 @@ describe('Главная страница с моковыми ингредиен
 
     cy.contains('Флюоресцентная булка R2-D3').should('exist');
   });
+
+    afterEach(() => {
+    cy.clearLocalStorage();
+  });
 });

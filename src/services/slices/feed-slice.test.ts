@@ -5,15 +5,6 @@ import type { TOrdersData } from '../../utils/types';
 const getInitialState = (): FeedState =>
   reducer(undefined, { type: '@@INIT' }) as FeedState;
 
-afterEach(() => {
-  localStorage.clear();
-
-  document.cookie.split(";").forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-});
 
 describe('feedsSlice reducer', () => {
   test('при fetchFeeds.pending isLoading становится true, error сбрасывается', () => {
@@ -31,7 +22,7 @@ describe('feedsSlice reducer', () => {
   test('при fetchFeeds.fulfilled данные записываются в стор, isLoading = false', () => {
     const initialState = {
       ...getInitialState(),
-      isLoading: true,        
+      isLoading: true,
       error: 'какая-то ошибка'
     };
 
@@ -71,13 +62,7 @@ describe('feedsSlice reducer', () => {
 
     const errorMessage = 'Не удалось загрузить заказы';
 
-
-    const action = fetchFeeds.rejected(
-      null, 
-      '',        
-      undefined, 
-      errorMessage 
-    );
+    const action = fetchFeeds.rejected(null, '', undefined, errorMessage);
 
     const nextState = reducer(initialState, action);
 

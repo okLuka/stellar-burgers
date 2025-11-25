@@ -1,8 +1,7 @@
 import reducer, { fetchUserOrders } from './user-order-slice';
 import type { TOrder } from '../../utils/types';
 
-const getInitialState = () =>
-  reducer(undefined, { type: '@@INIT' });
+const getInitialState = () => reducer(undefined, { type: '@@INIT' });
 
 const orderMock: TOrder = {
   _id: 'order-1',
@@ -13,16 +12,6 @@ const orderMock: TOrder = {
   updatedAt: '2024-01-01T00:00:00.000Z',
   ingredients: ['ing-1', 'ing-2']
 };
-
-afterEach(() => {
-  localStorage.clear();
-
-  document.cookie.split(";").forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-});
 
 describe('userOrderSlice reducer', () => {
   test('pending → isLoading = true, error = null', () => {
@@ -64,12 +53,7 @@ describe('userOrderSlice reducer', () => {
 
     const next = reducer(
       initial,
-      fetchUserOrders.rejected(
-        null,     
-        '',       
-        undefined,
-        errorMsg  
-      )
+      fetchUserOrders.rejected(null, '', undefined, errorMsg)
     );
 
     expect(next.isLoading).toBe(false);

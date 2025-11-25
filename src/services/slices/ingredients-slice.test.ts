@@ -19,15 +19,6 @@ const baseIngredient: TIngredient = {
   image_large: 'https://example.com/img-large.png'
 };
 
-afterEach(() => {
-  localStorage.clear();
-
-  document.cookie.split(";").forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-});
 
 describe('ingredientsSlice reducer', () => {
   test('при fetchIngredients.pending isLoading = true, error = null', () => {
@@ -57,7 +48,6 @@ describe('ingredientsSlice reducer', () => {
 
     expect(nextState.isLoading).toBe(false);
     expect(nextState.items).toEqual(payload);
-
   });
 
   test('при fetchIngredients.rejected пишет ошибку в error и isLoading = false', () => {
@@ -69,12 +59,7 @@ describe('ingredientsSlice reducer', () => {
 
     const errorMessage = 'Не удалось загрузить ингредиенты';
 
-    const action = fetchIngredients.rejected(
-      null,        
-      '',          
-      undefined,   
-      errorMessage 
-    );
+    const action = fetchIngredients.rejected(null, '', undefined, errorMessage);
 
     const nextState = reducer(initialState, action);
 

@@ -15,19 +15,16 @@ export const loginUser = createAsyncThunk<
   { rejectValue: string }
 >('user/login', async (credentials, { rejectWithValue }) => {
   try {
-    const res = await loginUserApi(credentials); // {success, accessToken, refreshToken, user}
+    const res = await loginUserApi(credentials);
     if (!res?.success) return rejectWithValue('Не удалось войти');
     localStorage.setItem('refreshToken', res.refreshToken);
     setCookie('accessToken', res.accessToken);
     return { user: res.user, token: res.accessToken };
   } catch (error: unknown) {
-  const msg =
-    error instanceof Error
-      ? error.message
-      : 'Ошибка при входе';
+    const msg = error instanceof Error ? error.message : 'Ошибка при входе';
 
-  return rejectWithValue(msg);
-}
+    return rejectWithValue(msg);
+  }
 });
 
 export const registerUser = createAsyncThunk<
@@ -36,26 +33,24 @@ export const registerUser = createAsyncThunk<
   { rejectValue: string }
 >('user/register', async (data, { rejectWithValue }) => {
   try {
-    const res = await registerUserApi(data); // {success, accessToken, refreshToken, user}
+    const res = await registerUserApi(data);
     if (!res?.success) return rejectWithValue('Не удалось зарегистрироваться');
     localStorage.setItem('refreshToken', res.refreshToken);
     setCookie('accessToken', res.accessToken);
     return { user: res.user, token: res.accessToken };
   } catch (error: unknown) {
-  const msg =
-    error instanceof Error
-      ? error.message
-      : 'Ошибка при регистрации';
+    const msg =
+      error instanceof Error ? error.message : 'Ошибка при регистрации';
 
-  return rejectWithValue(msg);
-}
+    return rejectWithValue(msg);
+  }
 });
 
 export const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
   'user/fetch',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await getUserApi(); // {success, user}
+      const res = await getUserApi();
       if (!res?.success)
         return rejectWithValue('Не удалось получить пользователя');
       return res.user;
@@ -76,14 +71,12 @@ export const updateUser = createAsyncThunk<
   { rejectValue: string }
 >('user/update', async (userPatch, { rejectWithValue }) => {
   try {
-    const res = await updateUserApi(userPatch); // {success, user}
+    const res = await updateUserApi(userPatch);
     if (!res?.success) return rejectWithValue('Не удалось обновить профиль');
     return res.user;
-    } catch (error: unknown) {
+  } catch (error: unknown) {
     const msg =
-      error instanceof Error
-        ? error.message
-        : 'Ошибка получения пользователя';
+      error instanceof Error ? error.message : 'Ошибка получения пользователя';
 
     return rejectWithValue(msg);
   }
@@ -93,15 +86,12 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
   'user/logout',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await logoutApi(); // {success: true}
+      const res = await logoutApi();
       if (!res?.success) return rejectWithValue('Не удалось выйти');
       localStorage.removeItem('refreshToken');
-      setCookie('accessToken', '', { expires: -1, path: '/' }); // очистить cookie
+      setCookie('accessToken', '', { expires: -1, path: '/' });
     } catch (error: unknown) {
-      const msg =
-        error instanceof Error
-          ? error.message
-          : 'Ошибка при выходе';
+      const msg = error instanceof Error ? error.message : 'Ошибка при выходе';
 
       return rejectWithValue(msg);
     }
@@ -131,7 +121,6 @@ export const userSlice = createSlice({
     }
   },
   extraReducers: (b) => {
-    // LOGIN
     b.addCase(loginUser.pending, (s) => {
       s.isLoading = true;
       s.error = null;
@@ -147,7 +136,6 @@ export const userSlice = createSlice({
       s.error = a.payload ?? 'Ошибка при входе';
     });
 
-    // REGISTER
     b.addCase(registerUser.pending, (s) => {
       s.isLoading = true;
       s.error = null;
@@ -163,7 +151,6 @@ export const userSlice = createSlice({
       s.error = a.payload ?? 'Ошибка при регистрации';
     });
 
-    // FETCH
     b.addCase(fetchUser.pending, (s) => {
       s.isLoading = true;
       s.error = null;
@@ -178,7 +165,6 @@ export const userSlice = createSlice({
       s.error = a.payload ?? 'Ошибка загрузки профиля';
     });
 
-    // UPDATE
     b.addCase(updateUser.pending, (s) => {
       s.isLoading = true;
       s.error = null;
@@ -193,7 +179,6 @@ export const userSlice = createSlice({
       s.error = a.payload ?? 'Ошибка обновления профиля';
     });
 
-    // LOGOUT
     b.addCase(logoutUser.fulfilled, (s) => {
       s.user = null;
       s.token = null;

@@ -11,7 +11,6 @@ export const ProfileMenu: FC = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      // navigate('/login', { replace: true });
     } catch {}
   };
 

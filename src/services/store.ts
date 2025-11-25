@@ -7,7 +7,6 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 
-// Используем комбинированный редьюсер напрямую
 const rootReducer = RootReducer;
 
 export const store = configureStore({

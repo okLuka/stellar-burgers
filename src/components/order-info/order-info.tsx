@@ -18,7 +18,7 @@ export const OrderInfo: FC = () => {
   const ingredientsLoading = useSelector(selectIngredientsLoading);
 
   const [orderData, setOrderData] = useState<TOrder | null>(null);
-  const [loading, setLoading] = useState(true); // загрузка заказа
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

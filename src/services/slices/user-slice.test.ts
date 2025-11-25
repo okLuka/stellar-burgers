@@ -9,30 +9,22 @@ import reducer, {
 
 import type { TUser } from '../../utils/types';
 
-const getInitialState = () =>
-  reducer(undefined, { type: '@@INIT' });
+const getInitialState = () => reducer(undefined, { type: '@@INIT' });
 
 const mockUser: TUser = {
   email: 'test@example.com',
   name: 'Test User'
 };
 
-afterEach(() => {
-  localStorage.clear();
-
-  document.cookie.split(";").forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-});
 
 describe('userSlice reducer', () => {
-
   test('loginUser.pending → isLoading = true, error = null', () => {
     const initial = getInitialState();
 
-    const next = reducer(initial, loginUser.pending('', { email: '', password: '' }));
+    const next = reducer(
+      initial,
+      loginUser.pending('', { email: '', password: '' })
+    );
 
     expect(next.isLoading).toBe(true);
     expect(next.error).toBeNull();
@@ -42,7 +34,10 @@ describe('userSlice reducer', () => {
     const initial = { ...getInitialState(), isLoading: true };
 
     const payload = { user: mockUser, token: 'token123' };
-    const next = reducer(initial, loginUser.fulfilled(payload, '', { email: '', password: '' }));
+    const next = reducer(
+      initial,
+      loginUser.fulfilled(payload, '', { email: '', password: '' })
+    );
 
     expect(next.isLoading).toBe(false);
     expect(next.error).toBeNull();
@@ -53,7 +48,10 @@ describe('userSlice reducer', () => {
   test('loginUser.rejected → пишет ошибку', () => {
     const initial = { ...getInitialState(), isLoading: true };
 
-    const next = reducer(initial, loginUser.rejected(null, '', { email: '', password: '' }, 'Ошибка входа'));
+    const next = reducer(
+      initial,
+      loginUser.rejected(null, '', { email: '', password: '' }, 'Ошибка входа')
+    );
 
     expect(next.isLoading).toBe(false);
     expect(next.error).toBe('Ошибка входа');
@@ -61,7 +59,10 @@ describe('userSlice reducer', () => {
   });
 
   test('registerUser.pending → isLoading = true, error = null', () => {
-    const next = reducer(getInitialState(), registerUser.pending('', { email: '', password: '', name: '' }));
+    const next = reducer(
+      getInitialState(),
+      registerUser.pending('', { email: '', password: '', name: '' })
+    );
 
     expect(next.isLoading).toBe(true);
     expect(next.error).toBeNull();
@@ -71,7 +72,10 @@ describe('userSlice reducer', () => {
     const initial = { ...getInitialState(), isLoading: true };
 
     const payload = { user: mockUser, token: 'reg-token' };
-    const next = reducer(initial, registerUser.fulfilled(payload, '', { email: '', password: '', name: '' }));
+    const next = reducer(
+      initial,
+      registerUser.fulfilled(payload, '', { email: '', password: '', name: '' })
+    );
 
     expect(next.isLoading).toBe(false);
     expect(next.user).toEqual(mockUser);
@@ -82,7 +86,15 @@ describe('userSlice reducer', () => {
   test('registerUser.rejected → пишет ошибку', () => {
     const initial = { ...getInitialState(), isLoading: true };
 
-    const next = reducer(initial, registerUser.rejected(null, '', { email: '', password: '', name: '' }, 'Ошибка рег'));
+    const next = reducer(
+      initial,
+      registerUser.rejected(
+        null,
+        '',
+        { email: '', password: '', name: '' },
+        'Ошибка рег'
+      )
+    );
 
     expect(next.isLoading).toBe(false);
     expect(next.error).toBe('Ошибка рег');
@@ -108,7 +120,10 @@ describe('userSlice reducer', () => {
   test('fetchUser.rejected → пишет ошибку', () => {
     const initial = { ...getInitialState(), isLoading: true };
 
-    const next = reducer(initial, fetchUser.rejected(null, '', undefined, 'Ошибка получения'));
+    const next = reducer(
+      initial,
+      fetchUser.rejected(null, '', undefined, 'Ошибка получения')
+    );
 
     expect(next.isLoading).toBe(false);
     expect(next.error).toBe('Ошибка получения');
@@ -135,7 +150,10 @@ describe('userSlice reducer', () => {
   test('updateUser.rejected → пишет ошибку', () => {
     const initial = { ...getInitialState(), isLoading: true };
 
-    const next = reducer(initial, updateUser.rejected(null, '', {}, 'Ошибка обновления'));
+    const next = reducer(
+      initial,
+      updateUser.rejected(null, '', {}, 'Ошибка обновления')
+    );
 
     expect(next.isLoading).toBe(false);
     expect(next.error).toBe('Ошибка обновления');
@@ -149,7 +167,10 @@ describe('userSlice reducer', () => {
       error: 'есть ошибка'
     };
 
-    const next = reducer(initial, logoutUser.fulfilled(undefined, '', undefined));
+    const next = reducer(
+      initial,
+      logoutUser.fulfilled(undefined, '', undefined)
+    );
 
     expect(next.user).toBeNull();
     expect(next.token).toBeNull();
@@ -162,7 +183,10 @@ describe('userSlice reducer', () => {
       error: null
     };
 
-    const next = reducer(initial, logoutUser.rejected(null, '', undefined, 'Не удалось выйти'));
+    const next = reducer(
+      initial,
+      logoutUser.rejected(null, '', undefined, 'Не удалось выйти')
+    );
 
     expect(next.error).toBe('Не удалось выйти');
   });

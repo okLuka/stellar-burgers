@@ -13,23 +13,12 @@ const getInitialState = () => ({
   userOrder: userOrderSlice.getInitialState()
 });
 
-afterEach(() => {
-  localStorage.clear();
-
-  document.cookie.split(";").forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-});
-
 describe('RootReducer initialization', () => {
   test('возвращает корректное начальное состояние', () => {
     const state = RootReducer(undefined, { type: '@@INIT' });
     const expected = getInitialState();
 
     expect(state).toEqual(expected);
-
   });
 
   test('каждый слайс инициализируется своим initialState', () => {
@@ -38,9 +27,7 @@ describe('RootReducer initialization', () => {
     expect(state.ingredients).toEqual(ingredientsSlice.getInitialState());
     expect(state.feeds).toEqual(feedsSlice.getInitialState());
     expect(state.user).toEqual(userSlice.getInitialState());
-    expect(state.burgerConstructor).toEqual(
-      constructorSlice.getInitialState()
-    );
+    expect(state.burgerConstructor).toEqual(constructorSlice.getInitialState());
     expect(state.userOrder).toEqual(userOrderSlice.getInitialState());
   });
 });

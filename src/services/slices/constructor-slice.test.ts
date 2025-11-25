@@ -3,15 +3,10 @@ import reducer, {
   removeIngredient,
   moveIngredient
 } from './constructor-slice';
-import type {
-  TIngredient,
-  TConstructorIngredient
-} from '../../utils/types';
-
+import type { TIngredient, TConstructorIngredient } from '../../utils/types';
 
 const getInitialState = () =>
   reducer(undefined, { type: '@@INIT' }) as ReturnType<typeof reducer>;
-
 
 const baseIngredient: TIngredient = {
   _id: 'test-id-1',
@@ -27,27 +22,15 @@ const baseIngredient: TIngredient = {
   image_large: 'image-large.png'
 };
 
-afterEach(() => {
-  localStorage.clear();
-
-  document.cookie.split(";").forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-});
-
 describe('burgerConstructor reducer', () => {
   test('обрабатывает добавление ингредиента (addIngredient)', () => {
     const state = getInitialState();
 
     const nextState = reducer(state, addIngredient(baseIngredient));
 
-
     expect(nextState.ingredients).toHaveLength(1);
 
     const added = nextState.ingredients[0];
-
 
     expect(added.id).toBeDefined();
     expect(added._id).toBe(baseIngredient._id);
@@ -55,7 +38,6 @@ describe('burgerConstructor reducer', () => {
   });
 
   test('обрабатывает удаление ингредиента (removeIngredient)', () => {
-
     const ingredient1: TConstructorIngredient = {
       ...baseIngredient,
       id: 'local-1'
@@ -73,7 +55,6 @@ describe('burgerConstructor reducer', () => {
     };
 
     const nextState = reducer(state, removeIngredient('local-1'));
-
 
     expect(nextState.ingredients).toHaveLength(1);
     expect(nextState.ingredients[0].id).toBe('local-2');
@@ -102,14 +83,12 @@ describe('burgerConstructor reducer', () => {
       ingredients: [ingredient1, ingredient2, ingredient3]
     };
 
-
     const nextState = reducer(
       state,
       moveIngredient({ fromIndex: 0, toIndex: 2 })
     );
 
     const idsOrder = nextState.ingredients.map((i) => i.id);
-
 
     expect(idsOrder).toEqual(['id-2', 'id-3', 'id-1']);
   });

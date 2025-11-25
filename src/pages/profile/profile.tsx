@@ -5,7 +5,6 @@ import { selectUser } from '@selectors';
 import { updateUser } from '../../services/slices/user-slice';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 

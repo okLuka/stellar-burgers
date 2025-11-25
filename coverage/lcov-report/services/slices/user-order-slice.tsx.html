@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.35% </span>
+                <span class="strong">77.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/56</span>
+                <span class='fraction'>45/58</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.35% </span>
+                <span class="strong">77.58% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>45/56</span>
+                <span class='fraction'>45/58</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -119,7 +119,9 @@
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -139,6 +141,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -158,20 +162,20 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -187,13 +191,15 @@ export const fetchUserOrders = createAsyncThunk&lt;
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    const orders = await getOrdersApi();</span>
 <span class="cstat-no" title="statement not covered" >    return orders;</span>
-<span class="cstat-no" title="statement not covered" >  } catch (err: any) {</span>
-<span class="cstat-no" title="statement not covered" >    err instanceof Error</span>
-<span class="cstat-no" title="statement not covered" >      ? err.message</span>
-<span class="cstat-no" title="statement not covered" >      : typeof err === 'string'</span>
-<span class="cstat-no" title="statement not covered" >        ? err</span>
-<span class="cstat-no" title="statement not covered" >        : 'Не удалось загрузить историю заказов';</span>
-<span class="cstat-no" title="statement not covered" >    return rejectWithValue(err);</span>
+<span class="cstat-no" title="statement not covered" >  } catch (error: unknown) {</span>
+<span class="cstat-no" title="statement not covered" >    const msg =</span>
+<span class="cstat-no" title="statement not covered" >      error instanceof Error</span>
+<span class="cstat-no" title="statement not covered" >        ? error.message</span>
+<span class="cstat-no" title="statement not covered" >        : typeof error === 'string'</span>
+<span class="cstat-no" title="statement not covered" >          ? error</span>
+<span class="cstat-no" title="statement not covered" >          : 'Не удалось загрузить историю заказов';</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    return rejectWithValue(msg);</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 });
 &nbsp;
@@ -238,7 +244,7 @@ export default userOrderSlice.reducer;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-21T13:59:25.494Z
+                at 2025-11-25T08:09:45.990Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
